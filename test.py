@@ -14,7 +14,7 @@ import os
 from PIL import Image
 
 from dataset import *
-from model import FCN8s
+from model import *
 from utils import *
 
 cur_path = os.path.abspath(os.path.dirname(__file__))
@@ -32,11 +32,17 @@ def get_image(name):
 def inference(arg):
     viz = Display_board(env_name="fcn test")
 
-    resnet = models.resnet34(pretrained=True)
-    net = FCN8s(resnet)
+    if arg.net == "SegNet":
+        net = SegNet()
+    elif arg.net == "FCN8s":
+        resnet = models.resnet34(pretrained=True)
+        net = FCN8s(resnet)
+    elif arg.net == "MNet":
+        net = MNet()
+
     if arg.mul_gpu:
         net = nn.DataParallel(net)
-    net.load_state_dict(torch.load(os.path.join(cur_path, "pre_train", str("FCN8s" + "_.pkl"))))
+    net.load_state_dict(torch.load(os.path.join(cur_path, "pre_train", str(arg.net + "_.pkl"))))
     net = net.cuda()
     net = net.eval()
 

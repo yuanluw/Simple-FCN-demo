@@ -33,13 +33,13 @@ def read_image(val_ratio=0.3, train=True):
 
 def train_transform(img, mask):
     im_aug = tfs.Compose([
-        tfs.Resize((320, 320)),
+        tfs.Resize((240, 240)),
         tfs.ToTensor(),
         tfs.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
     img = im_aug(img)
-    mask = tfs.Resize((320, 320))(mask)
+    mask = tfs.Resize((240, 240))(mask)
     mask = np.array(mask, dtype=np.int64)
     mask[mask > 0] = -1
     mask += 1
@@ -49,6 +49,7 @@ def train_transform(img, mask):
 
 def test_transform(img, mask):
     im_aug = tfs.Compose([
+        tfs.Resize((320, 320)),
         tfs.ToTensor(),
         tfs.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])

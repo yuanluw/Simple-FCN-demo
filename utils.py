@@ -60,3 +60,17 @@ class Display_board:
         plt.imshow(image)
         self.viz.matplot(plt)
 
+
+def get_F1_and_MCC(output, target):
+    _, i = output.max(1)
+
+    pos = (target == 1)
+    neg = (target == 0)
+
+    TP = float((i[pos] == 1).sum().item())
+    FN = float((i[pos] == 0).sum().item())
+    TN = float((i[neg] == 0).sum().item())
+    FP = float((i[neg] == 1).sum().item())
+    F1 = (2*TP)/(2*TP + FN + FP)
+    MCC = (TP*TN - FP*FN)/np.sqrt((TP+FP)*(TP+FN)*(TN+FP)*(TN+FN))
+    return F1, MCC

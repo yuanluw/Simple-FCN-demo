@@ -33,6 +33,7 @@ class FCN8s(nn.Module):
         self.deconv5 = nn.ConvTranspose2d(32, 16, kernel_size=3, stride=2, padding=1, dilation=1, output_padding=1)
         self.bn5 = nn.BatchNorm2d(16)
         self.classifier = nn.Conv2d(16, num_class, kernel_size=1)
+        self.softmax = nn.LogSoftmax(dim=1)
 
     def forward(self, x):
 
@@ -77,7 +78,7 @@ class FCN8s(nn.Module):
         score = self.classifier(score)
         if self.verbose:
             print("classifier size: ", score.size())
-        return score
+        return self.softmax(score)
 
 
 if __name__ == "__main__":
